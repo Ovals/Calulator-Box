@@ -8,6 +8,7 @@
 #define Pi 3.1415926
 using namespace std;
 ofstream fout;
+fstream fin;
 int tcin(int x)
 {
 	if(cin.fail()&&!cin.eof())
@@ -30,6 +31,30 @@ int gcd(int a,int b)
 		return b;
 	return gcd(b,a%b);
 }
+int Redution(int a,int b,bool x)
+{
+	if(x==1)
+	{
+		if(a%b==0)
+		{
+			printf("%d\n",(a/b));
+			fout<<a/b<<endl;
+		}
+		else if(b!=0)
+		{
+			int a1,b1;
+			a1=a/gcd(a,b);
+			b1=b/gcd(a,b);
+			printf("%d/%d\n",a1,b1);
+			fout<<a1<<'/'<<b1<<endl;
+		}
+		else
+		{
+			printf("No meaning!\n");
+		}
+	}
+	return a/b;
+}
 void Normal()
 {
 	int a=0,b=0;
@@ -41,25 +66,21 @@ void Normal()
 		case 43:
 			ans=a+b;
 			printf("%d%c%d=%d\n",a,mark,b,ans);
+			fout<<a<<mark<<b<<'='<<ans<<endl;
 			break;
 		case 45:
 			ans=a-b;
 			printf("%d%c%d=%d\n",a,mark,b,ans);
+			fout<<a<<mark<<b<<'='<<ans<<endl;
 			break;
 		case 42:
 			ans=a*b;
 			printf("%d%c%d=%d\n",a,mark,b,ans);
+			fout<<a<<mark<<b<<'='<<ans<<endl;
 			break;
 		case 47:
-			if(b!=0)
-			{
-				int a1,b1;
-				a1=a/gcd(a,b);
-				b1=b/gcd(a,b);
-				printf("%d/%d(Redution)\n",a1,b1);
-			}
-			else
-				printf("No meaning.\n");
+			fout<<a<<mark<<b<<'=';
+			ans=Redution(a,b,1);
 			break;
 		default:
 			printf("Unable to do that.\n");
@@ -74,7 +95,7 @@ void Triangle()
 	if(ans<=0)
 		printf("Impossible.\n");
 	else
-		printf("The area of it is %5.f(5 significant digits)\n.",ans);
+		printf("The area of it is %3.f(3 significant digits)\n.",ans);
 	printf("again?(y/n)");
 }
 void Function()
@@ -101,29 +122,42 @@ void Function()
 		else
 		{
 			if(b>0)
-				printf("y=%dx+%d\n",k,b);
+			{
+				printf("y=");
+				Redution((y1-y2),(x1-x2),1);
+				printf("x+%d\n",k,b);
+			}
 			if(b<0)
-				printf("y=%dx%d\n",k,b);
+			{
+				printf("y=");
+				Redution((y1-y2),(x1-x2),1);
+				printf("x%d\n",k,b);
+			}
 			if(b==0)
-				printf("y=%dx\n",k);
+			{
+				printf("y=");
+				Redution((y1-y2),(x1-x2),1);
+				printf("x\n",k);
+			}
 		}
 	}
 }
 int main()
 {
-	fout.open("out.txt");
-	fout<<"Weclome to use Calculator Box 1.00 demo!"<<endl
-		<<"We are trying to make things better"<<endl
-		<<"What's new?"<<endl
-		<<"*Simple File I/O"<<endl
-		<<"*add the power of fraction reduction in normal part"<<endl
-		<<"Hope you enjoy it!"<<endl
-		<<endl
-		<<"Your using record(last one):";
+	fout.open("Record.txt");
+	fout<<"Weclome to use Calculator Box 0.30 (demo)!"<<endl
+	    <<"We are trying to make things better"<<endl
+	    <<"What's new?"<<endl
+	    <<"*Simple File I/O"<<endl
+	    <<"*add the power of fraction reduction in normal & function part"<<endl
+	    <<"*add the Record.txt"<<endl
+	    <<"Hope you enjoy it!"<<endl
+	    <<endl<<endl
+	    <<"Your using record(last one):"<<endl;
 	int c=0;
+	printf("                             Calculator Box 0.30(demo)                      \n");
 	while(1)
 	{
-		printf("                             Calculator Box 1.00  demo                      \n");
 		printf("Can I help you?\nList:\n1.Normal\n2.Triangle\n3.function\n");
 		scanf("%d",&c);
 		switch(c)
@@ -144,12 +178,16 @@ int main()
 		printf("again?\n");
 		do
 		{
-			printf("Please input y or n\n");
-			cin>>c2;
+			printf("Please input 'y' or 'n'\n");
+			getchar();
 		}
-		while(c2!='y'&&c2!='n'&&cin.fail());
+		while(scanf("%c",&c2)==1&&c2!='y'&&c2!='n');
 		if(c2=='n')
+		{
+			printf("Bye.");
+			fout<<"(Successfully)"<<endl;
 			break;
+		}
 	}
 	return 0;
 }
